@@ -6,7 +6,7 @@
 // =========================================================================
 // ⚙️ TETAPAN PENTADBIR & KONFIGURASI SISTEM
 // =========================================================================
-const ADMIN_START_TIME = new Date("2026-10-25T09:40:00").getTime();
+const ADMIN_START_TIME = new Date("2026-11-10T09:00:00").getTime();
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiD5oDdXuNiSI0DwyW7t_Wbpt_la7kZUq9unlwOj3xRMFAG0nJvoCy7O2rN5mhbs2LuA/exec";
 
 const KL_QUESTIONS = [
