@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#020617" />
+  <title>Jabatan Challenge — Ops Tembak Gagak v2</title>
+
+  <!-- Pustaka Utiliti CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fail Penggayaan Projek -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-[100dvh] flex flex-col items-center justify-between p-2 sm:p-4 font-sans safe-area-inset relative">
+
+  <!-- Header -->
+  <header class="w-full max-w-xl text-center pt-1 pb-2 shrink-0">
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-wider text-amber-400 drop-shadow">
+      JABATAN CHALLENGE 🎯
+    </h1>
+    <p class="text-[11px] sm:text-xs text-slate-400 font-medium">Ops Kawalan Gagak • 60s Papan Skor Terpusat</p>
+  </header>
+
+  <!-- Panel Dashboard -->
+  <section class="w-full max-w-xl bg-slate-900/90 border border-slate-800 rounded-2xl p-2.5 sm:p-3 mb-2 flex items-center justify-around shadow-lg shrink-0">
+    <div class="text-center min-w-[70px]">
+      <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 font-bold block">Masa</span>
+      <span id="timerText" class="text-xl sm:text-2xl md:text-3xl font-black text-rose-400 font-mono transition-colors">60s</span>
+    </div>
+    <div class="h-7 w-px bg-slate-800"></div>
+    <div class="text-center min-w-[70px]">
+      <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 font-bold block">Skor</span>
+      <span id="scoreText" class="text-xl sm:text-2xl md:text-3xl font-black text-amber-400 font-mono">0</span>
+    </div>
+    <div class="h-7 w-px bg-slate-800"></div>
+    <div class="text-center min-w-[70px]">
+      <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 font-bold block">No. 1 Sistem</span>
+      <span id="topScoreText" class="text-xl sm:text-2xl md:text-3xl font-black text-emerald-400 font-mono">0</span>
+    </div>
+  </section>
+
+  <!-- Arena Permainan -->
+  <main id="gameArena" class="w-full max-w-xl flex-1 min-h-[260px] max-h-[52dvh] bg-gradient-to-b from-slate-900 via-indigo-950/70 to-slate-900 rounded-2xl sm:rounded-3xl border border-slate-800 relative overflow-hidden shadow-inner cursor-crosshair-custom touch-none">
+
+    <!-- Penunjuk Bilangan Gagak Tertembak -->
+    <div class="absolute top-2.5 left-3 bg-slate-950/85 border border-slate-700/80 px-2.5 py-1 rounded-full text-[11px] font-bold text-slate-200 z-10 flex items-center gap-1.5 shadow">
+      <span>🐦‍⬛</span>
+      <span>Gagak:</span>
+      <span id="crowStreakText" class="text-amber-400 font-mono font-black">0/3</span>
+    </div>
+
+    <!-- Sasaran 1 -->
+    <button id="targetBtn1" type="button" class="absolute hidden text-4xl sm:text-5xl transition-transform duration-75 active:scale-75 focus:outline-none target-flying select-none z-10" aria-label="Sasaran 1">
+      🐦‍⬛
+    </button>
+
+    <!-- Sasaran 2 -->
+    <button id="targetBtn2" type="button" class="absolute hidden text-4xl sm:text-5xl transition-transform duration-75 active:scale-75 focus:outline-none target-flying select-none z-10" aria-label="Sasaran 2">
+      🕊️
+    </button>
+
+    <!-- Amaran Pecutan 10 Saat Terakhir -->
+    <div id="frenzyBadge" class="absolute top-2 left-1/2 -translate-x-1/2 bg-rose-600/90 border border-rose-400 text-white font-black text-[10px] sm:text-xs px-3 py-0.5 rounded-full uppercase tracking-wider hidden shadow-lg z-10 whitespace-nowrap">
+      ⚠️ KECEMASAN: 10S TERAKHIR!
+    </div>
+
+    <!-- Skrin Kunci Sebelum Waktu Mula Rasmi -->
+    <div id="lockedScreen" class="absolute inset-0 bg-slate-950/95 backdrop-blur-md hidden flex flex-col items-center justify-center p-4 sm:p-6 text-center z-30">
+      <div class="text-4xl sm:text-5xl mb-2 animate-bounce">🔒</div>
+      <h2 class="text-base sm:text-xl font-black text-amber-400 mb-1 tracking-wide">OPS BELUM BERMULA</h2>
+      <p class="text-xs text-slate-300 max-w-xs mb-3 font-medium">Permainan ini dikunci oleh pihak pentadbir sehingga waktu rasmi pelancaran.</p>
+      
+      <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 mb-3 w-full max-w-xs">
+        <span class="text-[10px] uppercase text-slate-400 font-bold block">Waktu Mula Ditetapkan</span>
+        <span id="lockTargetTimeText" class="text-xs sm:text-sm font-bold text-slate-100 font-mono">-</span>
+      </div>
+
+      <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-2 w-full max-w-xs">
+        <span class="text-[10px] uppercase text-amber-400 font-bold block mb-1">Akan Dibuka Dalam Masa</span>
+        <span id="lockCountdownText" class="text-xl sm:text-2xl font-black text-amber-400 font-mono tracking-wider">00:00:00</span>
+      </div>
+    </div>
+
+    <!-- Skrin Mula -->
+    <div id="startScreen" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 text-center z-20">
+      <div class="flex gap-2 text-5xl sm:text-6xl mb-2 animate-bounce">
+        <span>🐦‍⬛</span><span>🕊️</span><span>💣</span>
+      </div>
+      <h2 class="text-lg sm:text-2xl font-black text-white mb-2">Ops Kawalan Gagak</h2>
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 mb-4 text-xs text-slate-300 max-w-xs space-y-1.5 text-left">
+        <p class="flex items-center justify-between"><span>🐦‍⬛ Gagak Bandar:</span> <span class="font-bold text-emerald-400">+10 Pts</span></p>
+        <p class="flex items-center justify-between"><span>🕊️ Merpati Dilindungi:</span> <span class="font-bold text-rose-400">-10 Pts</span></p>
+        <p class="flex items-center justify-between"><span>💣 Bahan Letupan:</span> <span class="font-bold text-rose-500">-15 Pts</span></p>
+        <p class="text-[10px] text-amber-300/90 pt-1 border-t border-slate-800 italic">💡 Tembak <b>3 ekor gagak</b> untuk kuiz bonus (+20 Pts, salah -5 Pts, masa 15s)!</p>
+      </div>
+      <button id="startGameBtn" type="button" class="bg-amber-500 hover:bg-amber-400 active:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-black py-2.5 px-7 sm:py-3 sm:px-8 rounded-xl shadow-lg transform active:scale-95 transition text-sm sm:text-base cursor-pointer">
+        MULA OPS (60s)
+      </button>
+    </div>
+
+    <!-- Skrin Tamat -->
+    <div id="gameOverScreen" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-4 sm:p-6 text-center z-20">
+      <span class="text-rose-500 font-black text-2xl sm:text-3xl mb-1 tracking-wider">OPS TAMAT!</span>
+      <p class="text-xs sm:text-sm text-slate-400 mb-3">Rekod markah anda terus ke pangkalan data utama.</p>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 sm:py-3 mb-4 w-full max-w-xs">
+        <span class="text-[10px] sm:text-xs uppercase text-slate-400 font-bold block">Markah Akhir</span>
+        <span id="finalScoreVal" class="text-3xl sm:text-4xl font-black text-amber-400 font-mono">0</span>
+      </div>
+
+      <div class="w-full max-w-xs space-y-2 mb-2">
+        <div class="flex gap-2">
+          <input 
+            id="playerNameInput" 
+            type="text" 
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            maxlength="16" 
+            placeholder="No.Pekerja..." 
+            class="bg-slate-800 border border-slate-700 text-xs sm:text-sm rounded-xl px-3 py-2.5 sm:py-3 flex-1 text-center font-bold focus:outline-none focus:border-amber-400 text-slate-100 placeholder-slate-500" 
+          />
+          <button id="saveScoreBtn" type="button" class="bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-700 text-slate-950 font-bold px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl transition shadow text-xs sm:text-sm flex items-center justify-center cursor-pointer">
+            <span id="saveBtnText">Simpan</span>
+          </button>
+        </div>
+        <p id="saveStatusMsg" class="text-[10px] text-slate-400 min-h-[14px] font-semibold"></p>
+      </div>
+
+      <button id="playAgainBtn" type="button" class="text-[11px] uppercase font-bold text-slate-400 hover:text-white underline underline-offset-4 mt-1 cursor-pointer">
+        Main Semula Tanpa Simpan
+      </button>
+    </div>
+  </main>
+
+  <!-- Papan 10 Pemain Terbaik -->
+  <section class="w-full max-w-xl bg-slate-900/80 border border-slate-800 rounded-2xl p-3 mt-2 shadow-md shrink-0">
+    <div class="flex justify-between items-center mb-2">
+      <div class="flex items-center gap-1.5">
+        <span class="text-sm">🏆</span>
+        <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-slate-200">Top 10 Pemain Terbaik (Live)</h3>
+      </div>
+      <button id="refreshBoardBtn" type="button" class="text-[10px] sm:text-[11px] text-amber-400 hover:text-amber-300 transition flex items-center gap-1 font-semibold cursor-pointer">
+        <span id="refreshIcon">🔄</span>
+        <span id="refreshBtnLabel">Kemaskini</span>
+      </button>
+    </div>
+
+    <div class="max-h-[140px] sm:max-h-[165px] overflow-y-auto pr-1">
+      <ul id="leaderboardList" class="space-y-1.5 text-xs font-medium">
+        <li class="text-center text-slate-500 italic py-2">Menghubungkan ke pelayan rekod...</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-2 text-[10px] text-slate-500 font-medium shrink-0">
+    © 2026 JABATAN CHALLENGE • Created by Jnol.Ai
+  </footer>
+
+  <!-- Modal Kuiz KL -->
+  <div id="quizModal" style="display: none;" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md items-center justify-center p-4 z-[9999]">
+    <div class="w-full max-w-sm bg-slate-900 border-2 border-amber-500 rounded-2xl p-5 shadow-2xl relative text-center">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <span class="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wide">
+          ⚡ BONUS KUIZ (+20 / -5 PTS)
+        </span>
+        <span class="bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[11px] font-black font-mono px-2.5 py-1 rounded-full flex items-center gap-1">
+          ⏳ <span id="quizTimerText">15s</span>
+        </span>
+      </div>
+
+      <div class="w-full bg-slate-800 rounded-full h-1.5 mb-3 overflow-hidden">
+        <div id="quizProgressBar" class="bg-amber-400 h-full w-full transition-all duration-1000 ease-linear"></div>
+      </div>
+
+      <h3 id="quizQuestion" class="text-sm font-bold text-slate-100 mb-4 px-1 leading-snug">
+        Memuatkan soalan...
+      </h3>
+      <div id="quizOptions" class="grid grid-cols-1 gap-2.5 mb-2"></div>
+      <p id="quizFeedback" class="text-xs font-bold min-h-[18px] mt-2"></p>
+    </div>
+  </div>
+
+  <!-- Modal Had Maksimum Simpan -->
+  <div id="limitModal" style="display: none;" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md items-center justify-center p-4 z-[10000]">
+    <div class="w-full max-w-sm bg-slate-900 border-2 border-amber-500/80 rounded-2xl p-5 shadow-2xl relative text-center">
+      <div class="text-4xl mb-2">⭐</div>
+      <h3 class="text-base font-black text-amber-400 mb-2">Terima kasih kerana bermain!</h3>
+      <p class="text-xs text-slate-300 mb-5 leading-relaxed font-medium">
+        Sistem hanya menyimpan 5 markah terbaik yang telah anda rekodkan sebelum ini, jadi skor pusingan ke-6 ini tidak direkodkan. Terima kasih atas penglibatan anda! 🎮
+      </p>
+      <button id="closeLimitModalBtn" type="button" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-black py-2.5 px-4 rounded-xl transition text-xs cursor-pointer shadow">
+        Faham & Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Logik Permainan Modular -->
+  <script src="game.js"></script>
+</body>
+</html>
