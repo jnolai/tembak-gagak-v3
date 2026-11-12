@@ -57,7 +57,7 @@ const CONFIG = {
   CROWS_PER_QUIZ: 3,
   FETCH_TIMEOUT_MS: 9000,
   REFRESH_COOLDOWN_MS: 10000,
-  POLL_INTERVAL_MS: 50000,
+  POLL_INTERVAL_MS: 30000,
   TARGET_TYPES: {
     CROW: { key: 'CROW', emoji: '🐦‍⬛', points: 10, color: 'text-emerald-400' },
     BIRD: { key: 'BIRD', emoji: '🕊️', points: -10, color: 'text-rose-400' },
