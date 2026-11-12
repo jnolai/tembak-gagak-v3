@@ -50,14 +50,14 @@ const KL_QUESTIONS = [
 const CONFIG = {
   TOTAL_TIME: 60,
   QUIZ_TIME: 15,
-  NORMAL_SPEED_MS: 700,
+  NORMAL_SPEED_MS: 800,
   FRENZY_SPEED_MS: 500,
   BONUS_POINTS: 20,
   QUIZ_PENALTY: 5,
   CROWS_PER_QUIZ: 3,
   FETCH_TIMEOUT_MS: 9000,
   REFRESH_COOLDOWN_MS: 10000,
-  POLL_INTERVAL_MS: 30000,
+  POLL_INTERVAL_MS: 40000,
   TARGET_TYPES: {
     CROW: { key: 'CROW', emoji: '🐦‍⬛', points: 10, color: 'text-emerald-400' },
     BIRD: { key: 'BIRD', emoji: '🕊️', points: -10, color: 'text-rose-400' },
