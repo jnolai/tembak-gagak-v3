@@ -72,7 +72,7 @@
       <div class="text-4xl sm:text-5xl mb-2 animate-bounce">🔒</div>
       <h2 class="text-base sm:text-xl font-black text-amber-400 mb-1 tracking-wide">OPS BELUM BERMULA</h2>
       <p class="text-xs text-slate-300 max-w-xs mb-3 font-medium">Permainan ini dikunci oleh pihak pentadbir sehingga waktu rasmi pelancaran.</p>
-      
+
       <div class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 mb-3 w-full max-w-xs">
         <span class="text-[10px] uppercase text-slate-400 font-bold block">Waktu Mula Ditetapkan</span>
         <span id="lockTargetTimeText" class="text-xs sm:text-sm font-bold text-slate-100 font-mono">-</span>
@@ -199,7 +199,63 @@
     </div>
   </div>
 
+  <!-- Modal Rasmi Permainan Tamat (13/11/2026, 11:59 PM) -->
+  <div id="endedModal" style="display: none;" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md items-center justify-center p-4 z-[10001]">
+    <div class="w-full max-w-sm bg-slate-900 border-2 border-rose-500/80 rounded-2xl p-6 shadow-2xl relative text-center">
+      <div class="text-4xl mb-2">🏁</div>
+      <span class="inline-block bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[10px] font-black uppercase px-3 py-0.5 rounded-full tracking-wider mb-2">
+        SESI DITUTUP
+      </span>
+      <h3 class="text-lg font-black text-white mb-2">Permainan Telah Tamat</h3>
+      <p class="text-xs text-slate-300 mb-4 leading-relaxed font-medium">
+        Dukacita dimaklumkan bahawa sesi permainan ini telah tamat secara rasmi pada jam <strong class="text-amber-400">11:59 malam</strong> bersamaan <strong class="text-amber-400">13 November 2026</strong>.
+      </p>
+      <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 mb-5">
+        <p class="text-xs font-bold text-emerald-400">Terima kasih atas penyertaan dan sokongan anda! 🙏</p>
+      </div>
+      <button id="closeEndedModalBtn" type="button" class="w-full bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-black py-2.5 px-4 rounded-xl transition text-xs cursor-pointer shadow">
+        Lihat Papan Skor
+      </button>
+    </div>
+  </div>
+
   <!-- Logik Permainan Modular -->
   <script src="game.js"></script>
+
+  <!-- Kawalan Automatik Tamat Permainan -->
+  <script>
+    (function () {
+      // Tarikh & masa tamat rasmi: 13 November 2026, 11:59:00 PM (UTC+8 Malaysia)
+      const GAME_END_TIME = new Date('2026-11-13T23:59:00+08:00').getTime();
+
+      const endedModal = document.getElementById('endedModal');
+      const closeEndedModalBtn = document.getElementById('closeEndedModalBtn');
+      const startGameBtn = document.getElementById('startGameBtn');
+      const saveScoreBtn = document.getElementById('saveScoreBtn');
+
+      function enforceGameEnded() {
+        if (Date.now() >= GAME_END_TIME) {
+          if (endedModal) endedModal.style.display = 'flex';
+          if (startGameBtn) {
+            startGameBtn.disabled = true;
+            startGameBtn.textContent = 'PERMAINAN TAMAT';
+          }
+          if (saveScoreBtn) {
+            saveScoreBtn.disabled = true;
+          }
+        }
+      }
+
+      if (closeEndedModalBtn) {
+        closeEndedModalBtn.addEventListener('click', function () {
+          endedModal.style.display = 'none';
+        });
+      }
+
+      // Semak sebaik halaman dimuatkan dan setiap 5 saat
+      enforceGameEnded();
+      setInterval(enforceGameEnded, 5000);
+    })();
+  </script>
 </body>
 </html>
